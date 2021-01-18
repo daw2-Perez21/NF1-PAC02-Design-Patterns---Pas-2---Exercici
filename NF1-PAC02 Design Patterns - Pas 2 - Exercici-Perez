@@ -1,0 +1,158 @@
+<html>
+<body>
+<head>
+<style>
+body {font : 12px verdana; font-weight:bold}
+td {font : 11px verdana;}
+</style>
+</head>
+
+<?php
+
+abstract class Construcció {
+  
+  private $nom;
+  private $superficie;
+  private $category;
+  private $muebles = array();
+  
+  public function add(Construcció & $muebles) {
+     array_push($this->muebles, $muebles);
+  }
+  
+  public function remove(Construcció & $muebles) {
+     array_pop($this->muebles);
+  }
+        
+  public function hasChildren() {
+    return (bool)(count($this->muebles) > 0);
+  }
+    
+  public function getChild($i) {
+    return $this->muebles[$i];
+  }
+    
+  public function getDescription() {
+    echo "- " . $this->getNom();
+    if ($this->hasChildren()) {
+      echo "-";
+      foreach($this->muebles as $muebles) {
+         echo "<table cellspacing=5 border=0><tr><td>&nbsp;&nbsp;&nbsp;</td><td>-";
+         $muebles->getDescription();
+         echo "</td></tr></table>";
+      }        
+    }
+  }
+  public function sumar() {
+    $suma = 0;
+    if ($this->hasChildren()){
+        foreach($this->muebles as $muebles){
+            $suma = $suma + $muebles->sumar();
+        }
+    }
+    return $suma + $this->getSuperficie();
+                
+  }
+ public function setNom($nom) {
+   $this->nom = $nom;
+ }
+  
+ public function getNom() {
+   return $this->nom;
+ }
+         
+  public function setSuperficie($superficie) {
+    $this->superficie = $superficie;
+  }
+  public function getSuperficie() {
+   return $this->superficie;
+  }
+}
+
+/***************Definimos las clases************************/
+class Habitacion extends Construcció {
+  function __construct($nom,$superficie) {
+    parent::setNom($nom);
+    parent::setSuperficie($superficie);
+  }      
+}
+
+class Ventanas extends Construcció {
+  function __construct($nom,$superficie) {
+   parent::setNom($nom);
+   parent::setSuperficie($superficie);
+  }
+}
+
+class Puertas extends Construcció {
+  function __construct($nom,$superficie) {
+   parent::setNom($nom);
+   parent::setSuperficie($superficie);
+  }
+}
+/*******Llamamos a las clases******************************/
+$Dormitorios = new Habitacion ("Dormitorios",6);
+$Dormitorio1 = new Habitacion ("Dormitorio Familar",10);
+$Dormitorio2 = new Habitacion ("Dormitorio Juvenil",15);
+$Dormitorios->add($Dormitorio1);
+$Dormitorios->add($Dormitorio2);
+$Habitaciones = new Habitacion ("Partes de la casa",15);
+$Comedor = new Habitacion ("Comedor",15);
+$Estudio = new Habitacion ("Estudio",5);
+$Cocina = new Habitacion ("Cocina",6);
+$Banyo = new Habitacion ("Banyo",5);
+$Terraza = new Habitacion ("Terraza",25);
+$Lavadero = new Habitacion ("Lavadero",5);
+$Recibidor = new Habitacion ("Recibidor",5);
+$Habitaciones->add($Comedor);
+$Habitaciones->add($Estudio);
+$Habitaciones->add($Banyo);
+$Habitaciones->add($Terraza);
+$Habitaciones->add($Lavadero);
+$Habitaciones->add($Recibidor);
+$Habitaciones->add($Cocina);
+
+$ventanas = new Ventanas ("Ventanas",6);
+$vendor1 = new Ventanas ("Ventana dormitorio 1",2);
+$vendor2 = new Ventanas ("Ventana dormitorio 1",2);
+$vencom = new Ventanas ("Ventana comedor",2);
+$venest = new Ventanas ("Ventana estudio",2);
+$vencoc = new Ventanas ("Ventana banyo",2);
+$venban = new Ventanas ("Ventana terraza",2);
+$venter = new Ventanas ("Ventana lavadero",2);
+$venlab = new Ventanas ("Ventana recibidor",2);
+$venrec = new Ventanas ("Ventana cocina",2);
+
+$ventanas->add($vendor1);
+$ventanas->add($vendor2);
+$ventanas->add($vencom);
+$ventanas->add($venest);
+$ventanas->add($vencoc);
+$ventanas->add($venban);
+$ventanas->add($venter);
+$ventanas->add($venlab);
+$ventanas->add($venter);
+
+$puertas = new Puertas("Puertas",6);
+$puerta1 = new Ventanas ("Puertas dormitorios",2);
+$puerta2 = new Ventanas ("Puertas habitacion",2);
+$puerta3 = new Ventanas ("Puerta banyo",2);
+$puerta4 = new Ventanas ("Puerta Principal",2);
+$puertas->add($puerta1);
+$puertas->add($puerta2);
+$puertas->add($puerta3);
+$puertas->add($puerta4);
+
+echo "<h2>Representacion de la vivienda:</h2>";
+echo "Partes de la habitación:<p>";
+$Dormitorios->getDescription();
+$Habitaciones->getDescription();
+$ventanas->getDescription();
+$puertas->getDescription();
+echo "<h2>Suma de Superficie total</h2>";
+$suma = $Habitaciones->sumar() + $ventanas->sumar() + $puertas->sumar();
+echo "la suma total de la superficie es:" . $suma;
+?>
+
+</body>
+</html>
